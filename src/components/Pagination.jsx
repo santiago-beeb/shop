@@ -52,7 +52,7 @@ const Paginate = ({ totalItems, itemsPerPage, neighbours, setOffset }) => {
 
   return (
     <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
-      <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+      <div className="sm:flex-1 sm:flex sm:items-center sm:justify-between">
         <div>
           <p className="text-sm text-gray-700">
             Showing <span className="font-medium">{itemsPerPage * (current - 1) + 1}</span> to{' '}

@@ -7,7 +7,6 @@
       "@common/*": ["common/*"],
       "@layout/*": ["layout/*"],
       "@services/*": ["services/*"],
-      "@api/*": ["services/api/*"],
       "@hooks/*": ["hooks/*"]
     }
   }
