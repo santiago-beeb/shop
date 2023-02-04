@@ -1,8 +1,10 @@
 import { useRef } from 'react';
-import { addProduct } from '@services/api/products';
+import { useRouter } from 'next/router';
+import { addProduct, updateProduct } from '@services/api/products';
 
-export default function FormProduct({ setOpen, setAlert }) {
+export default function FormProduct({ setOpen, setAlert, product }) {
   const formRef = useRef(null);
+  const router = useRouter();
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -14,24 +16,31 @@ export default function FormProduct({ setOpen, setAlert }) {
       categoryId: parseInt(formData.get('category')),
       images: ['https://i.blogs.es/ceda9c/dalle/450_1000.jpg'],
     };
-    addProduct(data)
-      .then(() => {
-        setAlert({
-          active: true,
-          message: 'Product added successfully',
-          type: 'success',
-          autoClose: false,
-        });
-        setOpen(false);
-      })
-      .catch((error) => {
-        setAlert({
-          active: true,
-          message: error.message,
-          type: 'error',
-          autoClose: false,
-        });
+
+    if (product) {
+      updateProduct(product.id, data).then(() => {
+        router.push('/dashboard/products/');
       });
+    } else {
+      addProduct(data)
+        .then(() => {
+          setAlert({
+            active: true,
+            message: 'Product added successfully',
+            type: 'success',
+            autoClose: false,
+          });
+          setOpen(false);
+        })
+        .catch((error) => {
+          setAlert({
+            active: true,
+            message: error.message,
+            type: 'error',
+            autoClose: false,
+          });
+        });
+    }
   };
 
   return (
@@ -41,9 +50,10 @@ export default function FormProduct({ setOpen, setAlert }) {
           <div className="grid grid-cols-6 gap-6">
             <div className="col-span-6 sm:col-span-3">
               <label htmlFor="title" className="block text-sm font-medium text-gray-700">
-                Title
+                Titulo
               </label>
               <input
+                defaultValue={product?.title}
                 type="text"
                 name="title"
                 id="title"
@@ -52,9 +62,10 @@ export default function FormProduct({ setOpen, setAlert }) {
             </div>
             <div className="col-span-6 sm:col-span-3">
               <label htmlFor="price" className="block text-sm font-medium text-gray-700">
-                Price
+                Precio
               </label>
               <input
+                defaultValue={product?.price}
                 type="number"
                 name="price"
                 id="price"
@@ -63,9 +74,10 @@ export default function FormProduct({ setOpen, setAlert }) {
             </div>
             <div className="col-span-6">
               <label htmlFor="category" className="block text-sm font-medium text-gray-700">
-                Category
+                Categoria
               </label>
               <select
+                value={product?.category?.id.toString()}
                 id="category"
                 name="category"
                 autoComplete="category-name"
@@ -74,7 +86,7 @@ export default function FormProduct({ setOpen, setAlert }) {
                 <option value="1">Clothes</option>
                 <option value="2">Electronics</option>
                 <option value="3">Furniture</option>
-                <option value="4">Toys</option>
+                <option value="4">Shoes</option>
                 <option value="5">Others</option>
               </select>
             </div>
@@ -84,6 +96,7 @@ export default function FormProduct({ setOpen, setAlert }) {
                 Description
               </label>
               <textarea
+                defaultValue={product?.description}
                 name="description"
                 id="description"
                 autoComplete="description"
@@ -93,7 +106,7 @@ export default function FormProduct({ setOpen, setAlert }) {
             </div>
             <div className="col-span-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700">Cover photo</label>
+                <label className="block text-sm font-medium text-gray-700">Subir Imagen</label>
                 <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
                   <div className="space-y-1 text-center">
                     <svg
@@ -116,7 +129,14 @@ export default function FormProduct({ setOpen, setAlert }) {
                         className="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
                       >
                         <span>Upload a file</span>
-                        <input id="images" name="images" type="file" className="sr-only" />
+
+                        <input
+                          defaultValue={product?.images}
+                          id="images"
+                          name="images"
+                          type="file"
+                          className="sr-only"
+                        />
                       </label>
                       <p className="pl-1">or drag and drop</p>
                     </div>
@@ -132,7 +152,7 @@ export default function FormProduct({ setOpen, setAlert }) {
             type="submit"
             className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
-            Save
+            Guardar
           </button>
         </div>
       </div>

@@ -9,6 +9,7 @@ import axios from 'axios';
 import Alert from '@common/Alert';
 import useAlert from '@hooks/useAlert';
 import { deleteProduct } from '@services/api/products';
+import Link from 'next/link';
 
 const PRODUCT_LIMIT = 5;
 
@@ -145,9 +146,9 @@ export default function Products() {
                         {product.id}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <a href="#" className="text-indigo-600 hover:text-indigo-900">
-                          Editar
-                        </a>
+                        <Link href={`/dashboard/edit/${product.id}`}>
+                          <a className="text-indigo-600 hover:text-indigo-900">Editar</a>
+                        </Link>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <XCircleIcon
